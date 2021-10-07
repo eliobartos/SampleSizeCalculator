@@ -1,6 +1,7 @@
 library(shiny)
 library(shinythemes)
 library(shinyWidgets)
+library(shinydashboard)
 library(dipsaus)
 library(misc)
 
@@ -11,6 +12,8 @@ source("tab_proportion_test.R")
 # UI 
 ui <- fluidPage(
     theme = shinytheme('spacelab'),
+    includeCSS("custom.css"),
+    #useShinydashboard(),
     navbarPage("Sample Size Calculator",
         tab_proportion_test
     )
@@ -32,7 +35,12 @@ server <- function(input, output) {
   })
   
   output$sample_size = renderText({
-    sample_size()
+    res = sample_size()
+    if(sample_size() == 9999999) {
+      "More than 10M users needed. Exact number not calculated."
+    } else {
+      format(res, big.mark = ',')
+    }
   })
 }
 
